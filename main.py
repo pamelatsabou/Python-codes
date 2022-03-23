@@ -1,10 +1,26 @@
-# tip calculator
+# Treasure island
 
-print("Welcome to the Tip Calculator.")
-total_bill = float(input("What was the total bill? $"))
-percentage_tip = int(input("What percentage tip would you like to give? 10, 12, or 15? "))
-num_of_people = int(input("How many people to split the bill? "))
-tip_as_percent = percentage_tip / 100
-pay_per_person = round(((tip_as_percent * total_bill) + total_bill) / num_of_people, 2)
-final_amount = "{:.2f}".format(pay_per_person)
-print(f"Each person should pay ${final_amount}")
+print("""
+Welcome to Treasure Island.
+Your mission is to find the treasure.""")
+choice1 = input("You're at the cross-road. Where do you want to go? 'left' or 'right'?\n").lower()
+if choice1 == "right":
+    print("Game over")
+else:
+    choice2 = input("""
+    You come to a lake. 
+    There's an island in the middle of the lake. 
+    Type 'wait' to wait for a boat.
+    Type 'swim' to swim across.\n""").lower()
+    if choice2 == 'swim':
+        print("Game over")
+    else:
+        choice3 = input("""
+        You arrive at the island unharmed.
+        There's a house with 3 doors, the red, the yellow and the blue.
+        Which one do you choose?\n""").lower()
+        if choice3 == 'yellow' or choice3 == 'red':
+            print("You entered the wrong room. Game over.")
+        else:
+            print("You win")
+
