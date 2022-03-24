@@ -1,26 +1,34 @@
-# Treasure island
+# Rock-Paper-Scissors
 
-print("""
-Welcome to Treasure Island.
-Your mission is to find the treasure.""")
-choice1 = input("You're at the cross-road. Where do you want to go? 'left' or 'right'?\n").lower()
-if choice1 == "right":
-    print("Game over")
-else:
-    choice2 = input("""
-    You come to a lake. 
-    There's an island in the middle of the lake. 
-    Type 'wait' to wait for a boat.
-    Type 'swim' to swim across.\n""").lower()
-    if choice2 == 'swim':
-        print("Game over")
-    else:
-        choice3 = input("""
-        You arrive at the island unharmed.
-        There's a house with 3 doors, the red, the yellow and the blue.
-        Which one do you choose?\n""").lower()
-        if choice3 == 'yellow' or choice3 == 'red':
-            print("You entered the wrong room. Game over.")
-        else:
-            print("You win")
+import random
+
+choice_list = ["rock", "paper", "scissors"]
+
+user_number = int(input("What do you choose? Type 0 for rock, 1 for paper or 2 for Scissors.\n"))
+user_choice = choice_list[user_number]
+print(f"You chose: {user_choice}")
+computer_choice = random.choice(choice_list)
+print(f"Computer chose: {computer_choice}")
+
+if user_number == 0:
+    if computer_choice == 'paper':
+        print("You lose")
+    elif computer_choice == 'scissors':
+        print("You win")
+    elif computer_choice == 'rock':
+        print("Draw")
+elif user_number == 1:
+    if computer_choice == 'scissors':
+        print("You lose")
+    elif computer_choice == 'rock':
+        print("You win")
+    elif computer_choice == 'paper':
+        print("Draw")
+elif user_number == 2:
+    if computer_choice == 'rock':
+        print("You lose")
+    elif computer_choice == 'paper':
+        print("You win")
+    elif computer_choice == 'scissors':
+        print("Draw")
 
