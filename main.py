@@ -1,44 +1,37 @@
-# Number Guessing Game
+# Check for even or odd number debugging challenge
+"""
+number = int(input("Which number do you want to check? "))
+if number % 2 == 0:
+    print("This is an even number.")
+else:
+    print("This is an odd number.")
 
-import random
 
-play_again = True
+# Debugging the leap year coding exercise
 
-while play_again:
-    number = random.choice(range(1, 101))
-    is_over = False
-    print("Welcome to the Number Guessing Game!\n"
-          "I'm thinking of a number between 1 and 100.")
-    difficulty = input("Choose a difficulty. Type 'easy' or 'hard': ")
-    if difficulty == 'easy':
-        lives = 10
-    elif difficulty == 'hard':
-        lives = 5
+year = int(input("Which year do you want to check? "))
 
-    def compare(user_guess, true_number):
-        global lives
-        global is_over
-        if user_guess == true_number:
-            is_over = True
-            return "You guessed the number, you win"
-        elif lives == 0:
-            is_over = True
-            return "You ran out of guesses, you lose"
+if year % 4 == 0:
+    if year % 100 == 0:
+        if year % 400 == 0:
+            print("Leap year.")
+        else:
+            print("Not a leap year.")
+    else:
+        print("Leap year.")
+else:
+    print("Not a leap year.")
+"""
 
-        elif user_guess < true_number:
-            return "Too low.\nGuess again."
-        elif user_guess > true_number:
-            return "Too high.\nGuess again."
 
-    while not is_over:
-        print(f"You have {lives} attempts remaining to guess the number.")
-        lives -= 1
-        guess = int(input("Make a guess: "))
-        print(compare(guess, number))
-        if lives == 0:
-            is_over = True
+# Debugging Fizzbuzz
 
-    answer = input("Would you like to play another game? Type 'y' or 'n': ")
-    if answer == 'n':
-        play_again = False
-
+for number in range(1, 101):
+    if number % 3 == 0 and number % 5 == 0:
+        print("FizzBuzz")
+    elif number % 3 == 0:
+        print("Fizz")
+    elif number % 5 == 0:
+        print("Buzz")
+    else:
+        print(number)
