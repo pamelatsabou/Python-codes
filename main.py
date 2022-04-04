@@ -1,76 +1,50 @@
-# Coffee Machine
+# Higher Lower
 
+from game_data import data
+from art import vs, logo
 import random
 
+print(logo)
+score = 0
+is_game_over = False
 
-def deal_card():
-    """Returns a random card from the deck."""
-    cards = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
-    card = random.choice(cards)
-    return card
+account_a = random.choice(data)
 
-
-def calculate_score(cards):
-    """Take a list of cards and return the score calculated from the cards"""
-    if sum(cards) == 21 and len(cards) == 2:
-        return 0
-    if 11 in cards and sum(cards) > 21:
-        cards.remove(11)
-        cards.append(1)
-        return sum(cards)
+while not is_game_over:
+    account_b = random.choice(data)
+    if account_a == account_b:
+        account_b = random.choice(data)
 
 
-def compare(user_score, computer_score):
-    if user_score > 21 and computer_score > 21:
-        return "You went over. You lose 😤"
-    if user_score == computer_score:
-        return "Draw 🙃"
-    elif computer_score == 0:
-        return "Lose, opponent has Blackjack 😱"
-    elif user_score == 0:
-        return "Win with a Blackjack 😎"
-    elif user_score > 21:
-        return "You went over. You lose 😭"
-    elif computer_score > 21:
-        return "Opponent went over. You win 😁"
-    elif user_score > computer_score:
-        return "You win 😃"
-    else:
-        return "You lose 😤"
+    def random_person(random_account):
+        name = random_account["name"]
+        description = random_account["description"]
+        country = random_account["country"]
+        return f"{name}, a {description}, from {country}"
 
 
-def play_game():
-    user_cards = []
-    computer_cards = []
-    is_game_over = False
-
-    for _ in range(2):
-        user_cards.append(deal_card())
-        computer_cards.append(deal_card())
-
-    while not is_game_over:
-        user_score = calculate_score(user_cards)
-        computer_score = calculate_score(computer_cards)
-        print(f"   Your cards: {user_cards}, current score: {user_score}")
-        print(f"   Computer's first card: {computer_cards[0]}")
-
-        if user_score == 0 or computer_score == 0 or user_score > 21:
-            is_game_over = True
-        else:
-            user_should_deal = input("Type 'y' to get another card, type 'n' to pass: ")
-            if user_should_deal == "y":
-                user_cards.append(deal_card())
-            else:
-                is_game_over = True
-
-    while computer_score != 0 and computer_score < 17:
-        computer_cards.append(deal_card())
-        computer_score = calculate_score(computer_cards)
-
-    print(f"   Your final hand: {user_cards}, final score: {user_score}")
-    print(f"   Computer's final hand: {computer_cards}, final score: {computer_score}")
-    print(compare(user_score, computer_score))
+    def compare():
+        """returns true if user enters 'a' which in this case should be greater"""
+        follower_count_a = account_a["follower_count"]
+        follower_count_b = account_b["follower_count"]
+        print(follower_count_a)  # , to check the number of followers for 'a'
+        print(follower_count_b)  # , to check for 'b'
+        if follower_count_a > follower_count_b:
+            return guess == "A"
+        elif follower_count_b > follower_count_a:
+            return guess == "B"
 
 
-while input("Do you want to play a game of Blackjack? Type 'y' or 'n': ") == "y":
-    play_game()
+    print(f"Compare A: {random_person(account_a)}.")
+    print(vs)
+    print(f"Against B: {random_person(account_b)}.")
+    guess = input("Which has more followers? Type 'A' or 'B': ").lower()
+
+    if not compare():
+        score += 1
+        print(f"You're right! Current score: {score}")
+        account_a = account_b
+
+    elif compare():
+        print(f"Sorry, that's wrong. Final score: {score}")
+        is_game_over = True
