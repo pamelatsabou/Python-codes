@@ -1,50 +1,65 @@
-# Higher Lower
+# Coffee Machine
 
-from game_data import data
-from art import vs, logo
-import random
+from data import MENU, resources
 
-print(logo)
-score = 0
-is_game_over = False
-
-account_a = random.choice(data)
-
-while not is_game_over:
-    account_b = random.choice(data)
-    if account_a == account_b:
-        account_b = random.choice(data)
+# print report
+# check resource sufficient?
+# Process coins
+# Check transaction successful?
+# Make coffee
 
 
-    def random_person(random_account):
-        name = random_account["name"]
-        description = random_account["description"]
-        country = random_account["country"]
-        return f"{name}, a {description}, from {country}"
+def resource_sufficient(order_ingredients):
+    for item in order_ingredients:
+        # comparing each value of the resource dictionary with that of the ordered drink
+        if order_ingredients[item] >= resources[item]:
+            print(f"Sorry there is not enough {item}.")
+            return False
+    return True
 
 
-    def compare():
-        """returns true if user enters 'a' which in this case should be greater"""
-        follower_count_a = account_a["follower_count"]
-        follower_count_b = account_b["follower_count"]
-        print(follower_count_a)  # , to check the number of followers for 'a'
-        print(follower_count_b)  # , to check for 'b'
-        if follower_count_a > follower_count_b:
-            return guess == "A"
-        elif follower_count_b > follower_count_a:
-            return guess == "B"
+def process_coins():
+    print("Please insert coins.")
+    quarters = int(input("How many quarters?$ "))
+    dimes = int(input("How many dimes?$ "))
+    nickles = int(input("How many nickles?$ "))
+    pennies = int(input("How many pennies?$ "))
+    total = (quarters * 0.25) + (dimes * 0.10) + (nickles * 0.05) + (pennies * 0.01)
+    return total
 
 
-    print(f"Compare A: {random_person(account_a)}.")
-    print(vs)
-    print(f"Against B: {random_person(account_b)}.")
-    guess = input("Which has more followers? Type 'A' or 'B': ").lower()
+def transaction_successful(amount_received, drink_cost):
+    if amount_received < drink_cost:
+        print("Sorry that's not enough money. Money refunded.")
+        return False
+    elif amount_received > drink_cost:
+        global profit
+        balance = round(amount_received - drink_cost, 2)
+        profit += drink_cost
+        print(f"Here is ${balance} in change.")
+        return True
+    return True
 
-    if not compare():
-        score += 1
-        print(f"You're right! Current score: {score}")
-        account_a = account_b
 
-    elif compare():
-        print(f"Sorry, that's wrong. Final score: {score}")
-        is_game_over = True
+def make_coffee(drink_name, order_ingredients):
+    for item in order_ingredients:
+        resources[item] -= order_ingredients[item]
+    print(f"Here is your {drink_name}. Enjoy!")
+
+
+profit = 0
+is_on = True
+
+while is_on:
+    request = input("What would you like? (espresso/latte/cappuccino): ")
+    if request == "off":
+        is_on = False
+    elif request == 'report':
+        print(f"Water: {resources['water']}ml\nMilk: {resources['milk']}ml\nCoffee: {resources['coffee']}g\nMoney: {profit}")
+    else:
+        drink = MENU[request]
+        # print(drink)
+        if resource_sufficient(drink["ingredients"]):
+            payment = process_coins()
+            if transaction_successful(payment, drink['cost']):
+                make_coffee(request, drink["ingredients"])
