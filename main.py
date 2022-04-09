@@ -1,38 +1,18 @@
-# Coffee machine using oop
+# Quiz project
 
-from menu import Menu, MenuItem
-from coffee_maker import CoffeeMaker
-from money_machine import MoneyMachine
+from data import question_data
+from question_model import Question
+from quiz_brain import QuizBrain
+question_bank = []
+for question in question_data:
+    question_text = question["question"]
+    question_answer = question["correct_answer"]
+    new_question = Question(question_text, question_answer)
+    question_bank.append(new_question)
 
-# print report
-# check resource sufficient?
-# Process coins
-# Check transaction successful?
-# Make coffee
-
-is_on = True
-
-coffee_maker = CoffeeMaker()
-money_machine = MoneyMachine()
-menu = Menu()
-
-while is_on:
-    options = menu.get_items()
-    request = input("What would you like? (espresso/latte/cappuccino): ")
-    if request == "off":
-        is_on = False
-    elif request == 'report':
-        coffee_maker.report()
-        money_machine.report()
-    else:
-        drink = menu.find_drink(request)
-        if coffee_maker.is_resource_sufficient(drink):
-            if money_machine.make_payment(drink.cost):
-                coffee_maker.make_coffee(drink)
-
-
-
-
-
-
+quiz = QuizBrain(question_bank)
+while quiz.still_has_questions():
+    quiz.next_question()
+print("You've completed the quiz\n"
+      f"Your final score was {quiz.question_number}/{len(question_bank)}")
 
