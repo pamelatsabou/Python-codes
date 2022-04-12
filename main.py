@@ -1,93 +1,44 @@
-# Turtle module
+# The Hirst Painting Project Part 1
 
+'''
+import colorgram
+rgb_colors = []
+colors = colorgram.extract('index.jpg', 30)
+for color in colors:
+    r = color.rgb.r
+    g = color.rgb.g
+    b = color.rgb.b
+    new_color = (r, g, b)
+    rgb_colors.append(new_color)
+
+print(rgb_colors)
+'''
 import turtle
 from turtle import Turtle, Screen
 import random
 
-timmy = Turtle()
-
+color_list = [(202, 164, 189), (230, 240, 245), (150, 75, 49), (223, 201, 135), (52, 93, 124), (172, 154, 40), (140, 30, 19), (222, 210, 108), (141, 92, 64), (118, 172, 203), (173, 163, 40), (210, 133, 171), (208, 67, 105), (223, 78, 56), (91, 106, 193), (143, 33, 60), (31, 139, 94), (57, 172, 105), (124, 218, 205), (228, 170, 186), (47, 186, 197), (126, 191, 168), (10, 86, 90), (81, 140, 129), (140, 17, 20), (14, 70, 64), (30, 68, 100), (107, 127, 153), (174, 94, 97), (176, 192, 209)]
+pam = Turtle()
 turtle.colormode(255)
+pam.speed("fastest")
 
-timmy.shape("turtle")
-timmy.color("blue")
+pam.setheading(225)
+pam.forward(255)
+pam.setheading(0)
+pam.hideturtle()
 
-##################################################
-'''
-for _ in range(4):
-    timmy.forward(100)
-    timmy.left(90)
-'''
-###################################################
+number_of_dots = 100
 
-'''
-for _ in range(20):
-    timmy.penup()
-    timmy.forward(5)
-    timmy.pendown()
-    timmy.forward(5)
-'''
-###################################################
-'''
-def draw_shape(num_sides):
-    angle = 360 / num_sides
-    for _ in range(5):
-        timmy.forward(100)
-        timmy.right(angle)
+for dot_count in range(1, number_of_dots + 1):
+    pam.dot(20, random.choice(color_list))
+    pam.penup()
+    pam.forward(50)
+    if dot_count % 10 == 0:
+        pam.setheading(90)
+        pam.forward(50)
+        pam.setheading(180)
+        pam.forward(500)
+        pam.setheading(0)
 
-for side_n in range(3,11):
-    draw_shape(side_n)
-'''
-
-#################################################
-
-
-def random_color():
-    r = random.randint(0, 255)
-    g = random.randint(0, 255)
-    b = random.randint(0, 255)
-    random_colour = (r, g, b)
-    return random_colour
-
-
-# generating random colors and walks
-'''
-timmy.hideturtle()
-pen_size = 1
-timmy.pensize(pen_size)
-var = random.randint(1, 100)
-
-for _ in range(200):
-    moves = ["timmy.forward(var)", "timmy.left(var)", "timmy.right(var)"]
-    colors = ["CornflowerBlue", "DarkOrchid", "IndianRed", "DeepSkyBlue", "LightSeaGreen", "wheat", "SlateGray", "SeaGreen"]
-    timmy.color(random_color())
-    random_walk = random.choice(moves)
-    timmy.pensize(pen_size)
-    timmy.speed("fastest")
-    if random_walk == "timmy.forward(var)":
-        timmy.forward(random.randint(10, 50))
-    elif random_walk == "timmy.left(var)":
-        timmy.left(90)
-    elif random_walk == "timmy.right(var)":
-        timmy.right(90)
-    pen_size += 0.1
-'''
-
-###################################################
-
-
-def draw_spirograph(size_of_graph):
-    for _ in range(360 // size_of_graph):
-        timmy.color(random_color())
-        timmy.circle(150)
-        timmy.left(size_of_graph)
-        timmy.speed("fastest")
-
-
-draw_spirograph(3)
-# drawing spirograph
-
-
-
-
-screen = Screen()
-screen.exitonclick()
+my_screen = Screen()
+my_screen.exitonclick()
