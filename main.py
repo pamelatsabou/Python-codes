@@ -1,50 +1,64 @@
-# Snake game
+# Arcade game
 
+from turtle import Turtle, Screen
+from paddle import Paddle
+from ball import Ball
 from scoreboard import ScoreBoard
-from food import Food
-from turtle import Screen
-from snake import Snake
 import time
 
 screen = Screen()
-screen.setup(width=600, height=600)
-screen.bgcolor("black")
-screen.title("My Snake Game")
+screen.screensize(canvwidth=800, canvheight=600, bg="black")
+screen.title("Pong Game")
 screen.tracer(0)
 
-screen.update()
+pam = Turtle()
+pam.speed("fastest")
+pam.color("white")
+pam.hideturtle()
+pam.penup()
+pam.goto(0, -250)
+pam.left(90)
 
+for _ in range(34):
+    pam.pensize(3)
+    pam.pendown()
+    pam.forward(5)
+    pam.penup()
+    pam.forward(10)
+
+l_paddle = Paddle((-320, 0))
+r_paddle = Paddle((320, 0))
 score = ScoreBoard()
-food = Food()
-snake = Snake()
+ball = Ball()
 
 screen.listen()
-screen.onkey(key="Up", fun=snake.up)
-screen.onkey(key="Down", fun=snake.down)
-screen.onkey(key="Left", fun=snake.left)
-screen.onkey(key="Right", fun=snake.right)
+screen.onkey(r_paddle.up, "Up")
+screen.onkey(r_paddle.down, "Down")
+screen.onkey(l_paddle.up, "w")
+screen.onkey(l_paddle.down, "s")
 
 game_is_on = True
 while game_is_on:
+    time.sleep(ball.move_speed)
     screen.update()
-    time.sleep(0.1)
-    snake.move()
+    ball.move_ball()
 
-    # Detect collision with food
-    if snake.head.distance(food) < 15:
-        food.refresh()
-        snake.extend()
-        score.increase_score()
+    # Detect collision with the wall
+    if ball.ycor() >= 270 or ball.ycor() <= -270:
+        ball.bounce_vertically()
 
-    # Detect collision with wall
-    if snake.head.xcor() > 300 or snake.head.xcor() < -300 or snake.head.ycor() > 300 or snake.head.ycor() < -300:
-        game_is_on = False
-        score.game_over()
+    # Detect collision with r_paddle
+    if (ball.distance(r_paddle) <= 50 and ball.xcor() > 300) or (ball.distance(l_paddle) <= 50 and ball.xcor() < -300):
+        ball.bounce_horizontally()
 
-    # Detect collision tail
-    for segment in snake.segments[1:]:
-        if snake.head.distance(segment) < 10:
-            game_is_on = False
-            score.game_over()
+    # Detect r_paddle misses
+    if ball.xcor() > 330:
+        ball.reset_position()
+        score.l_point()
+
+    # Detect l_paddle misses
+    if ball.xcor() < -330:
+        ball.reset_position()
+        score.r_point()
 
 screen.exitonclick()
