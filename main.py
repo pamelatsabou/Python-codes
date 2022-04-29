@@ -1,40 +1,13 @@
-import time
-from turtle import Screen
-from player import Player
-from car_manager import CarManager
-from scoreboard import ScoreBoard
+SPACEHOLDER = "[name]"
 
-screen = Screen()
-screen.setup(width=600, height=600)
-screen.tracer(0)
+with open("/home/pamela/Documents/Python projects/Day 24/7.4 mail-merge-project-start/Input/Names/invited_names.txt") as names_file:
+    names = names_file.readlines()
 
-pam = Player()
-car_manager = CarManager()
-scoreboard = ScoreBoard()
-
-screen.listen()
-screen.onkey(pam.move_forwards, "Up")
-# screen.onkey(pam.move_backwards, "Down")
-
-
-game_is_on = True
-while game_is_on:
-    time.sleep(0.1)
-    screen.update()
-
-    car_manager.create_car()
-    car_manager.car_movements()
-
-    # Detect collision with cars
-    for car in car_manager.all_cars:
-        if car.distance(pam) < 20:
-            game_is_on = False
-            scoreboard.game_over()
-
-    # Detect successful crossing
-    if pam.is_at_finish_line():
-        pam.go_to_start()
-        car_manager.level_up()
-        scoreboard.increase_level()
-
-screen.exitonclick()
+with open("/home/pamela/Documents/Python projects/Day 24/7.4 mail-merge-project-start/Input/Letters/starting_letter.docx") as letter_file:
+    each_letter = letter_file.read()
+    for name in names:
+        stripped_name = name.strip()
+        letter = each_letter.replace(SPACEHOLDER, stripped_name)
+        print(letter)
+        with open(f"/home/pamela/Documents/Python projects/Day 24/7.4 mail-merge-project-start/Output/ReadyToSend/letter_for_{stripped_name}.docx", mode="w") as completed_letter:
+            completed_letter.write(letter)
