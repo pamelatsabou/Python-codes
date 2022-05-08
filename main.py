@@ -1,13 +1,32 @@
-SPACEHOLDER = "[name]"
+import turtle
+import pandas
 
-with open("/home/pamela/Documents/Python projects/Day 24/7.4 mail-merge-project-start/Input/Names/invited_names.txt") as names_file:
-    names = names_file.readlines()
+screen = turtle.Screen()
+screen.title("U.S. States Game")
+image = "blank_states_img.gif"
+screen.addshape(image)
+turtle.shape(image)
 
-with open("/home/pamela/Documents/Python projects/Day 24/7.4 mail-merge-project-start/Input/Letters/starting_letter.docx") as letter_file:
-    each_letter = letter_file.read()
-    for name in names:
-        stripped_name = name.strip()
-        letter = each_letter.replace(SPACEHOLDER, stripped_name)
-        print(letter)
-        with open(f"/home/pamela/Documents/Python projects/Day 24/7.4 mail-merge-project-start/Output/ReadyToSend/letter_for_{stripped_name}.docx", mode="w") as completed_letter:
-            completed_letter.write(letter)
+data = pandas.read_csv("50_states.csv")
+states = data.state.to_list()
+guessed_states = []
+
+while len(guessed_states) < 50:
+    answer_state = screen.textinput(title=f"{len(guessed_states)}/50 States Correct",
+                                    prompt="What's another state's name?").title()
+
+    if answer_state == "Exit":
+        df = pandas.DataFrame(states)
+        df.to_csv("missing states.csv")
+        break
+    if answer_state in states:
+        guessed_states.append(answer_state)
+        t = turtle.Turtle()
+        t.hideturtle()
+        t.penup()
+        answer_row = data[data.state == answer_state]
+        t.goto(int(answer_row.x), int(answer_row.y))
+        t.write(answer_state)
+        states.remove(answer_state)
+
+turtle.mainloop()
