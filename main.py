@@ -1,34 +1,28 @@
-student_dict = {
-    "student": ["Angela", "James", "Lily"],
-    "score": [56, 76, 98]
-}
+from tkinter import *
 
-# Looping through dictionaries:
-for (key, value) in student_dict.items():
-    # Access key and value
-    pass
+window = Tk()
+window.title("My First GUI Program")
+window.minsize(width=500, height=300)
+# Label
 
-import pandas
+my_label = Label(text="I am a Label", font=("Times New Roman", 24, ""))
+my_label.pack()
 
-student_data_frame = pandas.DataFrame(student_dict)
+# change my_label text
+my_label["text"] = "New Text"   # or
+my_label.config(text="New Text")
 
-# Loop through rows of a data frame
-for (index, row) in student_data_frame.iterrows():
-    # Access index and row
-    # Access row.student or row.score
-    pass
+# button
+def button_clicked():
+    my_label.config(text=input.get())
 
-# Keyword Method with iterrows()
-# {new_key:new_value for (index, row) in df.iterrows()}
+button = Button(text="Click me", command=button_clicked)
+button.pack()
 
-# TODO 1. Create a dictionary in this format:
-# {"A": "Alfa", "B": "Bravo"}
-alphabet_csv = pandas.read_csv("nato_phonetic_alphabet.csv")
-alphabet_data_frame = pandas.DataFrame(alphabet_csv)
-# print(alphabet_data_frame)
-alphabet_dict = {row.letter: row.code for (index, row) in alphabet_data_frame.iterrows()}
-# print(alphabet_dict)
-# TODO 2. Create a list of the phonetic code words from a word that the user inputs.
-word = input("Enter a word: ").upper()
-word_list = [alphabet_dict[letter] for letter in word]
-print(word_list)
+# Entry
+input = Entry(width=10)
+input.pack()
+
+
+
+window.mainloop()
