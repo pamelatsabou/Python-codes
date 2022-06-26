@@ -1,66 +1,37 @@
-from tkinter import *
-import pandas
+##################### Normal Starting Project ######################
+import datetime as dt
 import random
+import pandas
+import smtplib
 
-BACKGROUND_COLOR = "#B1DDC6"
-current_card = {}
-words = {}
+# 2. Check if today matches a birthday in the birthdays.csv
+today_month = dt.datetime.now().month
+today_day = dt.datetime.now().day
+today = (today_month, today_day)
 
-try:
-    data = pandas.read_csv("data/words_to_learn.csv")
-except FileNotFoundError:
-    original_data = pandas.read_csv("data/french_words.csv")
-    words = original_data.to_dict(orient="records")
-else:
-    words = data.to_dict(orient="records")
+# HINT 2: Use pandas to read the birthdays.csv
+birthday = pandas.read_csv("birthdays.csv")
+birthdays_dict = {(data_row["month"], data_row["day"]): data_row for (index, data_row) in birthday.iterrows()}
 
+# HINT 4: Then you could compare and see if today's month/day tuple matches one of the keys in birthday_dict like this:
 
-def next_card():
-    global current_card, flip_timer
-    window.after_cancel(flip_timer)
-    current_card = random.choice(words)
-    card_front.itemconfig(card_title, text="French", fill="black")
-    card_front.itemconfig(card_word, text=current_card["French"], fill='black')
-    card_front.itemconfig(card_background, image=image1)
-    window.after(3000, func=flip_card)
-
-
-def flip_card():
-    card_front.itemconfig(card_title, text="English")
-    card_front.itemconfig(card_word, text=current_card["English"], fill="white")
-    card_front.itemconfig(card_background, image=card_back_img)
-
-
-def is_known():
-    words.remove(current_card)
-    next_card()
-    data = pandas.DataFrame(words)
-    data.to_csv("data/words to learn.csv", index=False)
+if (today_month, today_day) in birthdays_dict:
+    letter_list = ["letter_templates/letter_1.txt", "letter_templates/letter_2.txt", "letter_templates/letter_3.txt"]
+    file = random.choice(letter_list)
+    birthday_person = birthdays_dict[today]
+    with open(file) as letter_file:
+        letter = letter_file.read()
+        contents = letter.replace("[NAME]", birthday_person["name"])
+# 4. Send the letter generated in step 3 to that person's email address.
+my_email = "name1"
+password = "password"
+with smtplib.SMTP("smtp.gmail.com") as connection:
+    connection.starttls()
+    connection.login(my_email, password)
+    connection.sendmail(
+        from_addr=my_email,
+        to_addrs=birthday_person["email"],
+        msg=f"Subject:Happy Birthday!\n\n{contents}"
+    )
 
 
-window = Tk()
-window.title("Flashy")
-window.config(bg=BACKGROUND_COLOR, padx=50, pady=50)
-
-flip_timer = window.after(3000, func=flip_card)
-
-card_front = Canvas(width=800, height=526, bg=BACKGROUND_COLOR, highlightthickness=0)
-image1 = PhotoImage(file="/home/pamela/Documents/Python projects/1.1 flash-card-project-start/images/card_front.png")
-card_back_img = PhotoImage(file="/home/pamela/Documents/Python projects/1.1 flash-card-project-start/images/card_back.png")
-
-card_background = card_front.create_image(400, 263, image=image1)
-card_title = card_front.create_text(400, 150, text='', font=('Arial', 40, "italic"))
-card_word = card_front.create_text(400, 250, text="", font=("Arial", 60, "bold"))
-card_front.grid(column=0, row=0, columnspan=2)
-
-check_image = PhotoImage(file="/home/pamela/Documents/Python projects/1.1 flash-card-project-start/images/wrong.png")
-known_button = Button(image=check_image, highlightthickness=0, command=next_card)
-known_button.grid(column=0, row=1)
-
-cross_image = PhotoImage(file="/home/pamela/Documents/Python projects/1.1 flash-card-project-start/images/right.png")
-unknown_button = Button(image=cross_image, highlightthickness=0, command=is_known)
-unknown_button.grid(column=1, row=1)
-
-next_card()
-
-window.mainloop()
