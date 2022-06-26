@@ -1,35 +1,21 @@
-import requests
-from datetime import datetime
+from question_model import Question
+from data import question_data
+from quiz_brain import QuizBrain
+from ui import QuizInterface
 
-MY_LAT = 4.153740
-MY_LONG = 9.243970
-FORMAT = 0
+question_bank = []
+for question in question_data:
+    question_text = question["question"]
+    question_answer = question["correct_answer"]
+    new_question = Question(question_text, question_answer)
+    question_bank.append(new_question)
 
-'''
-response = requests.get(url="http://api.open-notify.org/iss-now.json")
-response.raise_for_status()
 
-data = response.json()
+quiz = QuizBrain(question_bank)
+quiz_ui = QuizInterface(quiz)
 
-longitude = data["iss_position"]["longitude"]
-latitude = data["iss_position"]["latitude"]
-iss_position = (longitude, latitude)
-print(iss_position)
-'''
+# while quiz.still_has_questions():
+#    quiz.next_question()
 
-parameters = {
-    "lat": MY_LAT,
-    "lng": MY_LONG,
-    "formatted": FORMAT,
-}
-response = requests.get("https://api.sunrise-sunset.org/json", params=parameters)
-response.raise_for_status()
-data = response.json()
-sunrise = data["results"]["sunrise"].split("T")[1].split(":")[0]
-sunset = data["results"]["sunset"].split("T")[1].split(":")[0]
-
-date = datetime.now()
-date_time = date.hour
-print(date_time)
-
-print(sunrise)
+print("You've completed the quiz")
+print(f"Your final score was: {quiz.score}/{quiz.question_number}")
