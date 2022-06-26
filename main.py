@@ -1,37 +1,35 @@
-##################### Normal Starting Project ######################
-import datetime as dt
-import random
-import pandas
-import smtplib
+import requests
+from datetime import datetime
 
-# 2. Check if today matches a birthday in the birthdays.csv
-today_month = dt.datetime.now().month
-today_day = dt.datetime.now().day
-today = (today_month, today_day)
+MY_LAT = 4.153740
+MY_LONG = 9.243970
+FORMAT = 0
 
-# HINT 2: Use pandas to read the birthdays.csv
-birthday = pandas.read_csv("birthdays.csv")
-birthdays_dict = {(data_row["month"], data_row["day"]): data_row for (index, data_row) in birthday.iterrows()}
+'''
+response = requests.get(url="http://api.open-notify.org/iss-now.json")
+response.raise_for_status()
 
-# HINT 4: Then you could compare and see if today's month/day tuple matches one of the keys in birthday_dict like this:
+data = response.json()
 
-if (today_month, today_day) in birthdays_dict:
-    letter_list = ["letter_templates/letter_1.txt", "letter_templates/letter_2.txt", "letter_templates/letter_3.txt"]
-    file = random.choice(letter_list)
-    birthday_person = birthdays_dict[today]
-    with open(file) as letter_file:
-        letter = letter_file.read()
-        contents = letter.replace("[NAME]", birthday_person["name"])
-# 4. Send the letter generated in step 3 to that person's email address.
-my_email = "name1"
-password = "password"
-with smtplib.SMTP("smtp.gmail.com") as connection:
-    connection.starttls()
-    connection.login(my_email, password)
-    connection.sendmail(
-        from_addr=my_email,
-        to_addrs=birthday_person["email"],
-        msg=f"Subject:Happy Birthday!\n\n{contents}"
-    )
+longitude = data["iss_position"]["longitude"]
+latitude = data["iss_position"]["latitude"]
+iss_position = (longitude, latitude)
+print(iss_position)
+'''
 
+parameters = {
+    "lat": MY_LAT,
+    "lng": MY_LONG,
+    "formatted": FORMAT,
+}
+response = requests.get("https://api.sunrise-sunset.org/json", params=parameters)
+response.raise_for_status()
+data = response.json()
+sunrise = data["results"]["sunrise"].split("T")[1].split(":")[0]
+sunset = data["results"]["sunset"].split("T")[1].split(":")[0]
 
+date = datetime.now()
+date_time = date.hour
+print(date_time)
+
+print(sunrise)
